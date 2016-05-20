@@ -147,5 +147,31 @@ describe('sequence-flow-properties', function() {
 
   }));
 
+  it('if set a condition to a default flow, the default property of the source obj is undefined',
+    inject(function(propertiesPanel, selection, elementRegistry) {
+
+    var shape = elementRegistry.get('SequenceFlow_6');
+    selection.select(shape);
+
+    var businessObject = getBusinessObject(shape),
+      source = getBusinessObject(shape.source),
+      conditionType = domQuery('select[name=conditionType]', propertiesPanel._container);
+
+    // given
+    expect(conditionType.value).to.be.equal('');
+    expect(businessObject.conditionExpression).to.be.undefined;
+    expect(source.default).to.not.be.undefined;
+
+    // when
+    // select condition
+    conditionType.options[0].selected = 'selected';
+    TestHelper.triggerEvent(conditionType, 'change');
+
+    // then
+    expect(conditionType.value).to.equal('expression');
+    expect(source.default).to.be.undefined;
+
+    }));
+
 
 });
